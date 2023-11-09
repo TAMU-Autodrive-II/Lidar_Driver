@@ -35,22 +35,15 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ExternalProject_Add(cepton_messages 
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ros2/cepton_messages
-  CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_SOURCE_DIR}/../../install/cepton_messages
-  INSTALL_COMMAND make install && mkdir -p ${CMAKE_CURRENT_SOURCE_DIR}/../../install/cepton_messages/share/colcon-core/packages/ && touch ${CMAKE_CURRENT_SOURCE_DIR}/../../install/cepton_messages/share/colcon-core/packages/cepton_messages
-)
 ExternalProject_Add(cepton_publisher 
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ros2/cepton_publisher
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_SOURCE_DIR}/../../install/cepton_publisher
   INSTALL_COMMAND make install && mkdir -p ${CMAKE_CURRENT_SOURCE_DIR}/../../install/cepton_publisher/share/colcon-core/packages/ && touch ${CMAKE_CURRENT_SOURCE_DIR}/../../install/cepton_publisher/share/colcon-core/packages/cepton_publisher
-  DEPENDS cepton_messages
 )
 ExternalProject_Add(cepton_subscriber
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ros2/cepton_subscriber
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_SOURCE_DIR}/../../install/cepton_subscriber
   INSTALL_COMMAND make install && mkdir -p ${CMAKE_CURRENT_SOURCE_DIR}/../../install/cepton_subscriber/share/colcon-core/packages/ && touch ${CMAKE_CURRENT_SOURCE_DIR}/../../install/cepton_subscriber/share/colcon-core/packages/cepton_subscriber
-  DEPENDS cepton_messages
 )
 
 ament_package()
