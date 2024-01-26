@@ -1,0 +1,23 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/saurabhb/humble/install/flir_camera_msgs/local/lib/python3.10/dist-packages",
+        "/home/saurabhb/humble/install/direct_visual_lidar_calibration/local/lib/python3.10/dist-packages",
+        "/home/saurabhb/humble/install/cepton_messages/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages",
+        "",
+        "/home/saurabhb/Packages/SuperGluePretrainedNetwork"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/saurabhb/humble/install/flir_camera_msgs/local/lib/python3.10/dist-packages",
+        "/home/saurabhb/humble/install/direct_visual_lidar_calibration/local/lib/python3.10/dist-packages",
+        "/home/saurabhb/humble/install/cepton_messages/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages",
+        "",
+        "/home/saurabhb/Packages/SuperGluePretrainedNetwork"
+    ],
+    "files.associations": {
+        "chrono": "cpp"
+    }
+}

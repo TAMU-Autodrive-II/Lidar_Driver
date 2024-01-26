@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/saurabhb/humble/install/spinnaker_camera_driver/include/**",
+        "/home/saurabhb/humble/install/flir_camera_msgs/include/**",
+        "/home/saurabhb/humble/install/direct_visual_lidar_calibration/include/**",
+        "/home/saurabhb/humble/install/cepton_messages/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/saurabhb/humble/src/cepton_lidar_driver/include/**",
+        "/home/saurabhb/humble/src/direct_visual_lidar_calibration/include/**",
+        "/home/saurabhb/humble/src/flir_camera_driver/spinnaker_camera_driver/include/**",
+        "/home/saurabhb/humble/src/flir_camera_driver/spinnaker_synchronized_camera_driver/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

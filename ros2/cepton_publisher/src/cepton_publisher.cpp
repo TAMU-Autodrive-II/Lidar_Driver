@@ -1,12 +1,18 @@
 #include "cepton_publisher.h"
 #include "sdk_proxy.h"
 #include <iostream>
+#include <chrono>
+#include <ctime>
+#include <cstdlib>
+#include <cstring>
+#include <regex>
 
 using PointCloud2 = sensor_msgs::msg::PointCloud2;
 using PointField = sensor_msgs::msg::PointField;
 using CeptonPoints = cepton_messages::msg::CeptonPointData;
 using namespace std::chrono_literals;
 using namespace std;
+
 namespace cepton_ros {
 inline void check_sdk_error(int re, const char *msg) {
   if (re != CEPTON_SUCCESS) {
@@ -63,6 +69,8 @@ static const float reflectivity_LUT[256] = {
  * @param points
  * @param node A pointer to the CeptonPublisher
  */
+
+
 void ceptonFrameCallback(CeptonSensorHandle handle, int64_t start_timestamp,
                          size_t n_points, size_t stride, const uint8_t *points,
                          void *node) {
@@ -78,6 +86,42 @@ void ceptonFrameCallback(CeptonSensorHandle handle, int64_t start_timestamp,
   reinterpret_cast<CeptonPublisher *>(node)->ceptonPointsPublisher->publish(
       cpts);
 }
+long long getChronyTimestamp() {
+    FILE* pipe = popen("chronyc -n tracking 2>&1", "r");
+    if (!pipe) {
+        std::cerr << "Error opening pipe to chronyc command." << std::endl;
+        return -1;
+    }
+
+    char buffer[128];
+    std::string result = "";
+    while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+        result += buffer;
+    }
+
+    auto pcloseStatus = pclose(pipe);
+    if (pcloseStatus == -1) {
+        std::cerr << "Error closing pipe to chronyc command." << std::endl;
+        return -1;
+    }
+
+    // Extract last offset value using regular expression
+    std::regex offsetRegex("Last offset\\s+:\\s+([+-]?\\d+\\.\\d+)\\s+seconds");
+    std::smatch offsetMatch;
+    if (std::regex_search(result, offsetMatch, offsetRegex)) {
+        std::string offsetStr = offsetMatch[1];
+        double lastOffset = std::stod(offsetStr);
+
+        // Get current time and adjust using the last offset
+        auto currentTime = std::chrono::system_clock::now();
+        auto timeSinceEpoch = std::chrono::duration_cast<std::chrono::microseconds>(currentTime.time_since_epoch());
+        auto adjustedTime = timeSinceEpoch + std::chrono::microseconds(static_cast<long long>(lastOffset * 1e6));
+
+        return adjustedTime.count();
+    }
+
+    return -1;
+}
 
 void sensorFrameCallback(CeptonSensorHandle handle, int64_t start_timestamp,
                          size_t n_points, size_t stride, const uint8_t *points,
@@ -86,7 +130,10 @@ void sensorFrameCallback(CeptonSensorHandle handle, int64_t start_timestamp,
   PointCloud2 cloud;
   cloud.height = 1;
   cloud.width = 4;
-  cloud.header.stamp.sec = start_timestamp / (int64_t)1e6;
+  long long chronyTimestamp = getChronyTimestamp();
+
+  cloud.header.stamp.sec = chronyTimestamp / (int64_t)1e6;
+  cloud.header.stamp.nanosec = chronyTimestamp % (int64_t)1e6 * (int64_t)1e3;
   cloud.header.frame_id = "lidar_frame";
 
   sensor_msgs::PointCloud2Modifier mod(cloud);
